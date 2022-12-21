@@ -209,6 +209,7 @@ const AddRole = () => {
             {
                 type: "list",
                 name: "departments",
+                message: "Which department is this role under?",
                 choices: departments
             }
         ])
