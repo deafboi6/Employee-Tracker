@@ -41,6 +41,10 @@ const promptQuestions = () => {
             } if (ans.choices === "Add Department") {
                 AddDepartment();
             } if (ans.choices === "Quit") {
+                const Quit = () => {
+                    db.end();
+                    console.log("Goodbye!");
+                }
                 Quit();
             } if (ans.choices === "Add Role") {
                 AddRole();
@@ -136,6 +140,7 @@ const AddEmployee = () => {
                         emp.push(chosenRole);
                         let sqlQuery = `SELECT * FROM employees`;
                         db.query(sqlQuery, (err, results) => {
+                            if (err) throw err;
                             const managers = results.map(({ id, first_name, last_name }) => ({ name: first_name + " " + last_name, value: id }));
                             inquirer
                                 .prompt([
@@ -149,7 +154,6 @@ const AddEmployee = () => {
                                 .then(ans => {
                                     const chosenManager = ans.manager;
                                     emp.push(chosenManager);
-                                    console.log(emp);
                                     let sqlQuery = 
                                     `INSERT INTO employees (first_name, last_name, role_id, manager_id)
                                     VALUES (?, ?, ?, ?)`;
@@ -218,6 +222,50 @@ const AddRole = () => {
                 console.log("New role created!");
                 promptQuestions();
             });
+        });
+    });
+};
+
+//------------------------------------------ UPDATES EMPLOYEE ------------------------------------------
+
+const UpdateEmployeeRole = () => {
+    let sqlQuery = `SELECT * from employees`;
+    db.query(sqlQuery, (err, results) => {
+        if (err) throw err;
+        const emp = results.map(({ id, first_name, last_name }) => ({ name: first_name + " " + last_name, value: id }));
+
+        let sqlQuery2 = `SELECT roles.id, roles.Title FROM roles`;
+        db.query(sqlQuery2, (err, results) => {
+            const roles = results.map(({ id, Title }) => ({ name: Title, value: id }));
+            if (err) throw err;
+    
+            inquirer
+                .prompt([
+                    {
+                        type: "list",
+                        name: "employee",
+                        message: "Which employee role would you like to update?",
+                        choices: emp
+                    },
+                    {
+                        type: "list",
+                        name: "role",
+                        message: "What would would you like to assign them?",
+                        choices: roles
+                    }
+                ])
+                .then(ans => {
+                    const updatedEmp = [ans.employee, ans. role];
+                    let sqlQuery = 
+                    `UPDATE employees
+                    SET role_id = ${updatedEmp[1]}
+                    WHERE id = ${updatedEmp[0]}`;
+                    db.query(sqlQuery, (err) => {
+                        if (err) throw err;
+                        console.log("Employee role updated!");
+                        promptQuestions();
+                    });
+                });
         });
     });
 };

@@ -18,5 +18,5 @@ VALUES ("Tony", "Smith", 1, NULL),
        ("Carter", "Hooper", 3, 1),
        ("Amber", "McCarthy", 4, NULL),
        ("Dawson", "Harrell", 5, 4),
-       ("Alexandria", "Carver", 4, NULL),
+       ("Alexandria", "Carver", 6, NULL),
        ("Naima", "Dixon", 7, NULL);
