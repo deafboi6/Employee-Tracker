@@ -56,7 +56,6 @@ const promptQuestions = () => {
 
 const ViewAllEmployees = () => {
     let sqlQuery =
-//Try to add manager to this query!!
     `SELECT
         employees.id, 
         employees.first_name AS "First Name", 
